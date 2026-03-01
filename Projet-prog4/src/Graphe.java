@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Graphe {
@@ -37,6 +40,20 @@ public class Graphe {
         }
         
     }
+
+    public void removeArc(int x, int y){
+    Node nodex = getNode(x);
+
+    Iterator<Arc> it = nodex.getSuccesseurs().iterator();
+
+    while(it.hasNext()){
+        Arc a = it.next();
+        if(a.getCible().getId() == y){
+            it.remove();
+            break;
+        }
+    }
+}
 
     public String toString(){
         String str = "";
@@ -143,6 +160,28 @@ public class Graphe {
                 largeur(n);
             }
         }
+    }
+
+    // Export d’un graphe sous format CSV selon la liste de ses arcs
+    // Format Source : Target
+    public void export() {
+    String buff = "Source,Target\n";
+    String sep = ",";
+    for (Node n : this.noeuds) {
+        for (Arc a : n.getSuccesseurs()) {
+            buff += a.getSource().getId() + sep + a.getCible().getId() + "\n";
+        }
+    }
+    File outputFile = new File(this.getClass() + ".csv");
+    FileWriter out;
+    try {
+        out = new FileWriter(outputFile);
+        out.write(buff);
+        out.close();
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
     }
 
 }
